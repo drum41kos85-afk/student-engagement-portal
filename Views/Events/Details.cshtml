@@ -1,0 +1,50 @@
+@model StudentEngagementPortal.Models.Event
+
+@{
+    ViewData["Title"] = Model.Title;
+    var currentUserId = User.Identity != null && User.Identity.IsAuthenticated
+        ? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+        : null;
+    var isRegistered = currentUserId != null && Model.Registrations.Any(r => r.StudentId == currentUserId);
+    var isFull = Model.Registrations.Count >= Model.MaxParticipants;
+}
+
+<div class="mb-4">
+    <a asp-action="Index" class="btn btn-link ps-0">&larr; Back to Events</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h1 class="card-title">@Model.Title</h1>
+        <h6 class="card-subtitle mb-3 text-muted">@Model.Category</h6>
+
+        <p><strong>When:</strong> @Model.StartsAt.ToString("dddd, MMMM d, yyyy - h:mm tt")</p>
+        <p><strong>Spots:</strong> @Model.Registrations.Count / @Model.MaxParticipants registered</p>
+
+        <p class="card-text">@Model.Description</p>
+
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            @if (isRegistered)
+            {
+                <form asp-action="Unregister" asp-route-id="@Model.Id" method="post">
+                    <button type="submit" class="btn btn-outline-danger">Cancel My Registration</button>
+                </form>
+            }
+            else if (isFull)
+            {
+                <button class="btn btn-secondary" disabled>Event Full</button>
+            }
+            else
+            {
+                <form asp-action="Register" asp-route-id="@Model.Id" method="post">
+                    <button type="submit" class="btn btn-primary">Register for this Event</button>
+                </form>
+            }
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login" class="btn btn-primary">Login to Register</a>
+        }
+    </div>
+</div>

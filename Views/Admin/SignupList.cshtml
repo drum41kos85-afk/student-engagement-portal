@@ -1,0 +1,35 @@
+@model StudentEngagementPortal.Models.Event
+
+@{
+    ViewData["Title"] = "Sign-up List";
+}
+
+<h1 class="mb-4">Sign-ups for "@Model.Title"</h1>
+<p class="text-muted">@Model.Registrations.Count / @Model.MaxParticipants registered</p>
+
+<a asp-action="Index" class="btn btn-link ps-0 mb-3">&larr; Back to Admin Panel</a>
+
+@if (!Model.Registrations.Any())
+{
+    <p class="text-muted">No one has registered yet.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Registered At</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reg in Model.Registrations)
+            {
+                <tr>
+                    <td>@reg.Student?.Email</td>
+                    <td>@reg.RegisteredAt.ToString("MMM d, yyyy - h:mm tt")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

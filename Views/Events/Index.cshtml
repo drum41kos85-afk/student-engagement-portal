@@ -1,0 +1,62 @@
+@model List<StudentEngagementPortal.Models.ViewModels.EventListItemViewModel>
+
+@{
+    ViewData["Title"] = "Events";
+}
+
+<h1 class="mb-4">Upcoming Events</h1>
+
+<form asp-action="Index" method="get" class="row g-2 mb-4">
+    <div class="col-auto">
+        <select name="category" class="form-select" onchange="this.form.submit()">
+            <option value="">All categories</option>
+            <option value="Sports">Sports</option>
+            <option value="Academic">Academic</option>
+            <option value="Social">Social</option>
+            <option value="Career">Career</option>
+        </select>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No events found.</p>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        @foreach (var ev in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h5 class="card-title">@ev.Title</h5>
+                            @if (ev.SpotsRemaining <= 0)
+                            {
+                                <span class="badge bg-danger">Full</span>
+                            }
+                            else if (ev.SpotsRemaining <= 3)
+                            {
+                                <span class="badge bg-warning text-dark">@ev.SpotsRemaining spots left</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">@ev.SpotsRemaining spots left</span>
+                            }
+                        </div>
+                        <h6 class="card-subtitle mb-2 text-muted">@ev.Category</h6>
+                        <p class="card-text">@ev.StartsAt.ToString("dddd, MMM d, yyyy - h:mm tt")</p>
+                        @if (ev.IsRegisteredByCurrentUser)
+                        {
+                            <span class="badge bg-primary mb-2">You're registered</span>
+                        }
+                        <div>
+                            <a asp-action="Details" asp-route-id="@ev.Id" class="btn btn-outline-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
