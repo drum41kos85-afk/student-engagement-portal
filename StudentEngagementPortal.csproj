@@ -14,5 +14,10 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-
+  <ItemGroup>
+    <Compile Remove="StudentEngagementPortal.Tests\**" />
+    <Content Remove="StudentEngagementPortal.Tests\**" />
+    <EmbeddedResource Remove="StudentEngagementPortal.Tests\**" />
+    <None Remove="StudentEngagementPortal.Tests\**" />
+  </ItemGroup>
 </Project>
